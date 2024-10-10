@@ -16,4 +16,6 @@ curl -X POST "http://localhost:8000/ask" -H "Content-Type: application/json" -d 
 ```
 
 
-# rag-
+please help me build on it, send a PR 
+
+contact me for help : kushagrasikka@gmail.com
