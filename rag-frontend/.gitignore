@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.Python
+env/
+venv/
+.env
+*.env
+.env.*
+!.env.example
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+data/rick_and_morty_episodes/*
+!data/rick_and_morty_episodes/.gitkeep
+notebooks/
+logs/
+models/
+.pytest_cache/
+
+# Node
+node_modules/
+build/
+dist/
