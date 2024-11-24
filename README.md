@@ -1,198 +1,223 @@
-# RAG Microservice with Docker and Python
 
-A Retrieval Augmented Generation (RAG) microservice that demonstrates the integration of document retrieval with OpenAI's language models. Created by Kushagra Sikka, this example uses Rick and Morty episode descriptions as the knowledge base.
+# RAG Microservice - Professional Profile Assistant
 
-## What is RAG?
+The **RAG Microservice** is an intelligent assistant designed to provide detailed, structured, and professional responses about **Kushagra Sikka's professional profile**. It uses Retrieval-Augmented Generation (RAG) to retrieve relevant information and generate well-formatted, concise answers tailored for recruiters and collaborators.
 
-RAG (Retrieval Augmented Generation) is a hybrid modeling technique that combines:
+## **Use Case**
 
-- Retrieval-based systems
-- Generative models (Large Language Models)
+This system is tailored to **Kushagra's recruiters** and professional network, allowing them to:
+- Fetch **structured professional summaries**.
+- Retrieve details about **technical skills** with usage examples.
+- Explore **academic achievements**, **work experience**, and **projects**.
+- Gain insights into **recent contributions** and **research focus**.
+- Access contact information and links to **professional profiles**.
 
-Key advantages:
+The assistant ensures:
+- **Accurate and verified information** retrieval from curated documents.
+- **Well-formatted responses** using bullet points for readability.
+- A **professional tone** to enhance user experience and utility.
 
-- Combines accuracy of retrieval systems with the flexibility of generative models
-- Uses dense embeddings for document retrieval
-- Allows for knowledge-based generation using specific document corpus
+### Example Questions
+- **"Who is Kushagra Sikka?"**  
+  Provides a professional overview, recent impact, and technical expertise.
+  
+- **"What are Kushagra's technical skills?"**  
+  Details programming languages, cloud platforms, and tools with usage examples.
+  
+- **"Tell me about Kushagra's achievements."**  
+  Highlights teaching impact, technical accomplishments, and academic recognition.
 
-## Prerequisites
+---
 
-- Docker
-- Python 3.12
-- OpenAI API key
+## **Architecture**
 
-## Installation
+The system integrates:
+- **Backend**: FastAPI + Haystack for RAG implementation.
+- **Frontend**: React + TailwindCSS for a user-friendly interface.
+- **Deployment**: Docker, Jenkins, and AWS EC2 for production readiness.
 
-1. Clone the repository:
+### **Backend Workflow**
+1. **Document Store**: Stores structured professional data (e.g., skills, projects, achievements).
+2. **Retriever**: Fetches relevant documents based on the query.
+3. **Prompt Builder**: Constructs dynamic prompts tailored to the query type.
+4. **Generator**: Uses a text generation model to produce well-formatted, bullet-pointed responses.
 
+### **Frontend Features**
+- Interactive UI for querying Kushagra's profile.
+- Real-time response rendering with React.
+- Mobile-responsive design using TailwindCSS.
+
+---
+
+## **Local Development**
+
+Follow these steps to set up the project locally:
+
+### **1. Clone the Repository**
 ```bash
-git clone https://github.com/kushagrasikka/rag-microservice-python.git
-cd rag-microservice-python
+git clone https://github.com/YourUsername/RAG_Microservice.git
+cd RAG_Microservice
 ```
 
-2. Create and configure your environment file:
-
-```bash
-# Create .env file
-touch .env
-
-# Add your OpenAI API key to .env
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-```
-
-3. Install dependencies (if running locally):
-
+### **2. Set Up the Backend**
 ```bash
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # On Windows use: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Project Structure
-
-```
-.
-├── data/
-│   └── rick_and_morty_episodes/
-│       ├── season1.txt
-│       ├── season2.txt
-│       └── ...
-├── rag_microservice/
-│   └── app.py
-├── Dockerfile
-├── requirements.txt
-└── run_app.sh
-```
-
-## Dependencies
-
-```
-fastapi
-haystack
-python-dotenv
-sentence-transformers
-scikit-learn
-numpy
-pydantic
-uvicorn
-```
-
-## Running the Service
-
-1. Using the shell script:
-
+### **3. Set Up the Frontend**
 ```bash
-./run_app.sh
+cd rag-frontend
+npm install
 ```
 
-This script will:
-
-- Build the Docker image
-- Run the container
-- Mount necessary volumes
-- Set up port forwarding
-- Clean up the container when stopped
-
-2. Manual Docker commands:
-
+### **4. Create Environment Variables**
+Copy the example `.env` file and update it with your configuration:
 ```bash
-# Build the image
-docker build -t kushagra-rag-microservice:latest .
-
-# Run the container
-docker run -d --rm \
-    -p 8000:8000 \
-    -v $(pwd)/data:/app/data \
-    -v $(pwd)/rag_microservice:/root/app \
-    --env-file .env \
-    kushagra-rag-microservice:latest
+cp .env.example .env
 ```
 
-## API Endpoints
+### **5. Run the Application Locally**
 
-### Health Check
-
+#### **Backend**
 ```bash
-curl http://localhost:8000/health
+uvicorn rag_microservice.app:app --reload
 ```
 
-### Ask Questions
-
+#### **Frontend**
+In a new terminal:
 ```bash
-# Example by Kushagra Sikka
-curl -X POST "http://localhost:8000/ask" \
-     -H "Content-Type: application/json" \
-     -d '{"question": "What is a Meeseeks box?"}'
+cd rag-frontend
+npm start
 ```
 
-## Docker Management
+---
 
-View running containers:
+## **Docker Deployment**
 
+To deploy the application using Docker:
 ```bash
-docker ps
+docker-compose up -d
 ```
 
-View logs:
+---
 
-```bash
-docker logs <container-id>
+## **Production Deployment**
+
+1. Configure an AWS EC2 instance with the necessary environment.
+2. Set up Docker and Jenkins for continuous integration and deployment.
+3. Refer to the `deployment/README.md` file for step-by-step instructions.
+
+---
+
+## **Project Structure**
+
+```
+RAG_Microservice/
+├── rag_microservice/         # Backend code
+│   └── app.py                # Main FastAPI application
+├── rag-frontend/             # React frontend
+├── data/                     # Data directory
+├── docker-compose.yml        # Docker compose configuration
+├── Jenkinsfile               # CI/CD pipeline
+└── deployment/               # Deployment documentation and scripts
 ```
 
-Stop the service:
+---
 
-```bash
-docker stop <container-id>
-```
+## **Environment Variables**
 
-Clean up resources:
+### **Backend**
+| Variable               | Description                                       |
+|------------------------|---------------------------------------------------|
+| `CORPUS_DOCUMENTS_PATH` | Path to the document corpus (e.g., professional details). |
+| `TEXT_EMBEDDING_MODEL`  | Model for text embeddings (e.g., `sentence-transformers/all-MiniLM-L6-v2`). |
+| `GENERATOR_MODEL`       | Model for text generation (e.g., `google/flan-t5-large`). |
 
-```bash
-# Remove stopped containers
-docker container prune
+### **Frontend**
+| Variable                | Description                                   |
+|-------------------------|-----------------------------------------------|
+| `REACT_APP_API_URL`     | Backend API URL (e.g., `http://localhost:8000`). |
 
-# Remove images
-docker image rm kushagra-rag-microservice:latest
-```
+---
 
-## Environment Variables
+## **Features**
 
-- `OPENAI_API_KEY`: Your OpenAI API key
-- `EMBEDDING_MODEL`: Sentence transformer model for embeddings (default: "sentence-transformers/all-MiniLM-L6-v2")
-- `GENERATOR_MODEL`: OpenAI model for text generation (default: "gpt-4-mini")
-- `DATA_PATH`: Path to document corpus
+### **Backend**
+- Implements RAG using Haystack components:
+  - **Document Splitter**: Chunks documents for better retrieval.
+  - **Retriever**: Retrieves relevant documents based on queries.
+  - **Prompt Builder**: Constructs dynamic prompts for generation.
+  - **Generator**: Produces well-structured responses.
+- Pre-processed corpus includes:
+  - Professional profile, achievements, and technical skills.
+  - Work experience and key projects.
+  - Contact information.
 
-## Architecture
+### **Frontend**
+- Query interface with a clean, professional design.
+- Supports real-time query results.
+- Mobile-friendly and intuitive layout.
 
-The microservice uses:
+---
 
-- FastAPI for the web server
-- Haystack for the RAG pipeline
-- SentenceTransformers for document embeddings
-- OpenAI's API for text generation
-- Docker for containerization
+## **How It Works**
 
-The RAG pipeline consists of:
+1. **Ask a Question**: The user asks a question, such as "What are Kushagra's skills?".
+2. **Document Retrieval**: The system retrieves relevant sections from the document store.
+3. **Dynamic Prompt Creation**: A prompt is generated based on the question type.
+4. **Answer Generation**: The model generates a structured, bullet-pointed response.
+5. **Response Display**: The frontend displays the response in a user-friendly format.
 
-1. Document store creation
-2. Document embedding
-3. Retriever setup
-4. Prompt template creation
-5. Generator configuration
+---
 
-## Contributing
+## **Use Case for Recruiters**
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### **Objective**
+To provide a **quick, reliable, and structured way** for recruiters to:
+- Understand Kushagra's professional profile.
+- Explore technical expertise and projects.
+- Gain insights into recent achievements and research focus.
 
-## License
+### **Advantages**
+- **Time-Saving**: Direct answers without the need to parse lengthy resumes.
+- **Structured Format**: Responses are concise and categorized for better readability.
+- **Accurate Data**: Fetches verified information only.
 
-This project is open source and available under the [MIT License](LICENSE).
+### **Example Queries**
+- **"Who is Kushagra Sikka?"**
+  - Learn about Kushagra's current roles, educational background, and recent impact.
+- **"What are Kushagra's achievements?"**
+  - Understand his teaching impact, technical accomplishments, and academic recognition.
+- **"Tell me about Kushagra's skills."**
+  - Explore his technical expertise with usage examples.
 
-## Author
+---
 
-**Kushagra Sikka**  
-Master's in Computer Science  
-University of Florida  
-Class of 2024
+## **Contributing**
 
-For questions or collaborations, please reach out to me on [GitHub](https://github.com/kushagrasikka).
+1. Fork the repository.
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add AmazingFeature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. Open a Pull Request.
+
+---
+
+## **Contact**
+
+For further queries or contributions, reach out to **Kushagra Sikka**:
+- **Email**: kushagrasikka@gmail.com
+- **Portfolio**: [kushagrasikka.com](https://www.kushagrasikka.com)
+- **GitHub**: [github.com/KushagraSikka](https://github.com/KushagraSikka)
+- **LinkedIn**: [linkedin.com/in/kushagrasikka](https://linkedin.com/in/kushagrasikka)
