@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - CORPUS_DOCUMENTS_PATH=/app/data/professional_info
+      - CORPUS_DOCUMENTS_FILE_EXT=txt
+      - TEXT_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - GENERATOR_MODEL=google/flan-t5-large
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./rag-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
